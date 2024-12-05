@@ -5,6 +5,7 @@ using Material.BLL.Services.Interfaces;
 using Material.DAL.Entity;
 using Material.DAL.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using ReflectionHelper = Material.BLL.Helpers.ReflectionHelper;
 
 namespace Material.BLL.Services;
 
@@ -15,7 +16,7 @@ public class UserService(IUserRepository userRepository, IMapper mapper) : IUser
     
     public async Task<UserModel?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var userDb = await userRepository.GetByIdAsync(id, cancellationToken);
+        var userDb = await _userRepository.GetByIdAsync(id, cancellationToken);
         if (userDb is null)
             throw new UserNotFoundException($"User with this Id {id} not found");
         
@@ -49,47 +50,76 @@ public class UserService(IUserRepository userRepository, IMapper mapper) : IUser
 
     public async Task<UserModel> UpdateUserAsync(int id, UserModel user, CancellationToken cancellationToken = default)
     {
-        // var userDb = await _userRepository.GetByIdAsync(id, cancellationToken);
-        //
-        // _logger.LogAndThrowErrorIfNull(userDb, new UserNotFoundException($"User with this Id {id} not found"));
-        //
+        var userDb = await _userRepository.GetByIdAsync(id, cancellationToken);
+        if (userDb is null)
+            throw new UserNotFoundException($"User with this Id {id} not found");
+        
         // userDb!.Password = string.IsNullOrEmpty(user.Password)
         //     ? userDb.Password
         //     : PasswordHelper.HashPassword(user.Password);
-        //
-        // foreach (var propertyMap in ReflectionHelper.WidgetUtil<ProfileModel, Profile>.PropertyMap)
+        
+        foreach (var propertyMap in ReflectionHelper.WidgetUtil<UserModel, User>.PropertyMap)
+        {
+            var userProperty = propertyMap.Item1;
+            var userDbProperty = propertyMap.Item2;
+        
+            var userSourceValue = userProperty.GetValue(user);
+            var userTargetValue = userDbProperty.GetValue(userDb);
+        
+            if (userSourceValue != null && !ReferenceEquals(userSourceValue, "") && !userSourceValue.Equals(userTargetValue))
+            {
+                userDbProperty.SetValue(userDb, userSourceValue);
+            }
+        }
+        
+        await _userRepository.UpdateUserAsync(userDb, cancellationToken);
+        var userModel = _mapper.Map<UserModel>(userDb);
+        return userModel;
+    }
+
+    public async Task<UserModel> GetUserByRefreshTokenAsync(string refreshToken,
+        CancellationToken cancellationToken = default)
+    {
+        var userDb = await _userRepository.GetAll()
+            .FirstOrDefaultAsync(i =>
+                    i.AuthorizationInfo != null &&
+                    i.AuthorizationInfo.RefreshToken == refreshToken,
+                cancellationToken);
+        if (userDb is null)
+            throw new UserNotFoundException($"User with this refresh token {refreshToken} not found");
+
+        if (userDb.AuthorizationInfo is not null && userDb.AuthorizationInfo.ExpiredDate <= DateTime.Now.AddDays(-1))
+            throw new TimeoutException();
+
+        var userModel = _mapper.Map<UserModel>(userDb);
+        return userModel;
+    }
+
+    public async Task<UserModel?> GetUserByLoginAndPasswordAsync(string login, string password,
+        CancellationToken cancellationToken = default)
+    {
+        var userDb = await _userRepository.GetAll().FirstOrDefaultAsync(i => i.Login == login, cancellationToken);
+        if (userDb is null)
+            throw new WrongLoginOrPasswordException("Wrong login or password");
+
+        // if (!PasswordHelper.VerifyHashedPassword(userDb!.Password, password))
         // {
-        //     var userProperty = propertyMap.Item1;
-        //     var userDbProperty = propertyMap.Item2;
-        //
-        //     var userSourceValue = userProperty.GetValue(user.Profile);
-        //     var userTargetValue = userDbProperty.GetValue(userDb.Profile);
-        //
-        //     if (userSourceValue != null && !ReferenceEquals(userSourceValue, "") && !userSourceValue.Equals(userTargetValue))
-        //     {
-        //         userDbProperty.SetValue(userDb.Profile, userSourceValue);
-        //     }
+        //     throw new WrongLoginOrPasswordException("Wrong login or password");
         // }
-        //
-        // await _userRepository.UpdateUserAsync(userDb, cancellationToken);
-        // var userModel = _mapper.Map<UserModel>(userDb);
-        // return userModel;
-        throw new NotImplementedException();
+
+        var userModel = _mapper.Map<UserModel>(userDb);
+        return userModel;
     }
 
-    public Task<UserModel> GetUserByRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
+    public async Task<UserModel?> GetUserByLogin(string login, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
-    }
+        var userDb = await _userRepository.GetAll()
+            .FirstOrDefaultAsync(i => i.Login == login, cancellationToken);
+        if (userDb is null)
+            throw new UserNotFoundException($"User with this login {login} not found");
 
-    public Task<UserModel?> GetUserByLoginAndPasswordAsync(string login, string password, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<UserModel?> GetUserByLogin(string login, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
+        var userModel = _mapper.Map<UserModel>(userDb);
+        return userModel;
     }
 
     public async Task LogOutAsync(int userId, CancellationToken cancellationToken = default)
@@ -98,7 +128,7 @@ public class UserService(IUserRepository userRepository, IMapper mapper) : IUser
         if (userDb is null)
             throw new UserNotFoundException($"User with this Id {userId} not found");
 
-        if (userDb!.AuthorizationInfo is not null)
+        if (userDb.AuthorizationInfo is not null)
         {
             userDb.AuthorizationInfo = null;
             await _userRepository.UpdateUserAsync(userDb, cancellationToken);
