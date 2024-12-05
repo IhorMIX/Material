@@ -13,10 +13,12 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.1.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.1.0" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Material.BLL\Material.BLL.csproj" />
       <ProjectReference Include="..\Material.DAL\Material.DAL.csproj" />
     </ItemGroup>
 

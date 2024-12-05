@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 namespace Material.BLL.Helpers;
 
-public class ReflectionHelper
+internal class ReflectionHelper
 {
-    public static class WidgetUtil<T1, T2>
+    public class WidgetUtil<T1, T2>
     {
         public static readonly IEnumerable<Tuple<PropertyInfo, PropertyInfo>> PropertyMap;
 
