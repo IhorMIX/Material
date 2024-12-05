@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Material.Web", "Material.Web\Material.Web.csproj", "{7B6EC126-682D-42F5-A2D4-A877E228381C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Material.DAL", "Material.DAL\Material.DAL.csproj", "{C6B20EE4-534A-40E1-825C-4D2FD5A0154D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Material.BLL", "Material.BLL\Material.BLL.csproj", "{413F42FF-ED12-4A05-A991-2181834FC7DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{7B6EC126-682D-42F5-A2D4-A877E228381C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B6EC126-682D-42F5-A2D4-A877E228381C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B6EC126-682D-42F5-A2D4-A877E228381C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6B20EE4-534A-40E1-825C-4D2FD5A0154D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6B20EE4-534A-40E1-825C-4D2FD5A0154D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6B20EE4-534A-40E1-825C-4D2FD5A0154D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6B20EE4-534A-40E1-825C-4D2FD5A0154D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{413F42FF-ED12-4A05-A991-2181834FC7DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{413F42FF-ED12-4A05-A991-2181834FC7DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{413F42FF-ED12-4A05-A991-2181834FC7DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{413F42FF-ED12-4A05-A991-2181834FC7DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
