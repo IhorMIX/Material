@@ -13,7 +13,8 @@ public interface IUserService : IBaseService<UserModel>
     Task<UserModel> GetUserByRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default);
 
     Task<UserModel?> GetUserByLoginAndPasswordAsync(string login, string password, CancellationToken cancellationToken = default);
-    
+    Task AddAuthorizationValueAsync(UserModel user, string refreshToken, DateTime? expiredDate = null,
+        CancellationToken cancellationToken = default);
     Task<UserModel?> GetUserByLogin(string login, CancellationToken cancellationToken = default);
     
     Task LogOutAsync(int userId, CancellationToken cancellationToken = default);

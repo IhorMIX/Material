@@ -111,6 +111,25 @@ public class UserService(IUserRepository userRepository, IMapper mapper) : IUser
         return userModel;
     }
 
+    public async Task AddAuthorizationValueAsync(UserModel user, string refreshToken,
+        DateTime? expiredDate = null,
+        CancellationToken cancellationToken = default)
+    {
+        var userDb = await _userRepository.GetByIdAsync(user.Id, cancellationToken);
+        if (userDb is null)
+            throw new UserNotFoundException($"User with this Id {user.Id} not found");
+
+        if (userDb!.AuthorizationInfo is not null && userDb.AuthorizationInfo.ExpiredDate <= DateTime.Now.AddDays(-1))
+            await LogOutAsync(user.Id, cancellationToken);
+
+        userDb.AuthorizationInfo = new AuthorizationInfo
+        {
+            RefreshToken = refreshToken,
+            ExpiredDate = expiredDate
+        };
+        await _userRepository.UpdateUserAsync(userDb, cancellationToken);
+    }
+
     public async Task<UserModel?> GetUserByLogin(string login, CancellationToken cancellationToken = default)
     {
         var userDb = await _userRepository.GetAll()
