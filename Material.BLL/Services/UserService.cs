@@ -5,6 +5,7 @@ using Material.BLL.Services.Interfaces;
 using Material.DAL.Entity;
 using Material.DAL.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Material.BLL.Helpers;
 using ReflectionHelper = Material.BLL.Helpers.ReflectionHelper;
 
 namespace Material.BLL.Services;
@@ -34,7 +35,7 @@ public class UserService(IUserRepository userRepository, IMapper mapper) : IUser
             throw new AlreadyLoginAndEmailException("Login is already used by another user");
         
         var userDbModel = _mapper.Map<User>(user);
-        // userDbModel.Password = PasswordHelper.HashPassword(userDbModel.Password);
+        userDbModel.Password = PasswordHelper.HashPassword(userDbModel.Password);
         await _userRepository.CreateUser(userDbModel, cancellationToken);
         user.Id = userDbModel.Id;
     }
@@ -54,9 +55,9 @@ public class UserService(IUserRepository userRepository, IMapper mapper) : IUser
         if (userDb is null)
             throw new UserNotFoundException($"User with this Id {id} not found");
         
-        // userDb!.Password = string.IsNullOrEmpty(user.Password)
-        //     ? userDb.Password
-        //     : PasswordHelper.HashPassword(user.Password);
+        userDb!.Password = string.IsNullOrEmpty(user.Password)
+            ? userDb.Password
+            : PasswordHelper.HashPassword(user.Password);
         
         foreach (var propertyMap in ReflectionHelper.WidgetUtil<UserModel, User>.PropertyMap)
         {
@@ -102,10 +103,10 @@ public class UserService(IUserRepository userRepository, IMapper mapper) : IUser
         if (userDb is null)
             throw new WrongLoginOrPasswordException("Wrong login or password");
 
-        // if (!PasswordHelper.VerifyHashedPassword(userDb!.Password, password))
-        // {
-        //     throw new WrongLoginOrPasswordException("Wrong login or password");
-        // }
+        if (!PasswordHelper.VerifyHashedPassword(userDb!.Password, password))
+        {
+            throw new WrongLoginOrPasswordException("Wrong login or password");
+        }
 
         var userModel = _mapper.Map<UserModel>(userDb);
         return userModel;

@@ -19,18 +19,14 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        // Добавляем контроллеры
         services.AddControllers();
-
-        // Добавляем AutoMapper
+        
         services.AddAutoMapper(typeof(Startup));
-
-        // Регистрация зависимостей
+        
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserService, UserService>();
         services.AddSingleton<TokenHelper>();
-
-        // Настройка подключения к базе данных
+        
         var connectionString = Environment.GetEnvironmentVariable("SQLSERVER_CONNECTION_STRING") 
                                ?? Configuration.GetConnectionString("ConnectionString");
 
@@ -40,7 +36,6 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        // Обработка ошибок в зависимости от окружения
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
@@ -50,19 +45,16 @@ public class Startup
             app.UseExceptionHandler("/Error");
             app.UseHsts();
         }
-
-        // Настройка статических файлов и маршрутов
+        
         app.UseStaticFiles();
         app.UseRouting();
-
-        // Настройка аутентификации и авторизации
+        
         app.UseAuthentication();
         app.UseAuthorization();
-
-        // Настройка маршрутов контроллеров
+        
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapControllers(); // Маппинг маршрутов для контроллеров
+            endpoints.MapControllers();
         });
     }
 }
