@@ -23,6 +23,8 @@ public class Startup
         
         services.AddAutoMapper(typeof(Startup));
         
+        services.AddJwtAuth();
+        
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserService, UserService>();
         services.AddSingleton<TokenHelper>();
