@@ -40,14 +40,12 @@ public class UserRepository(MaterialDbContext materialDbContext) : IUserReposito
     public async Task UpdateUserAsync(User user, CancellationToken cancellationToken = default)
     {
         _materialDbContext.Users.Update(user);
-
         await _materialDbContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task DeleteUserAsync(User user, CancellationToken cancellationToken = default)
     {
         _materialDbContext.Users.Remove(user);
-
         await _materialDbContext.SaveChangesAsync(cancellationToken);
     }
 }
