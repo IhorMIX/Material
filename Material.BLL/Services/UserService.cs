@@ -32,7 +32,7 @@ public class UserService(IUserRepository userRepository, IMapper mapper) : IUser
                 cancellationToken);
         
         if (userDb is not null && userDb.Login == user.Login)
-            throw new AlreadyLoginAndEmailException("Login is already used by another user");
+            throw new AlreadyLoginException("Login is already used by another user");
         
         var userDbModel = _mapper.Map<User>(user);
         userDbModel.Password = PasswordHelper.HashPassword(userDbModel.Password);
