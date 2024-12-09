@@ -5,7 +5,7 @@ using Material.BLL.Services.Interfaces;
 using Material.DAL.Entity;
 using Material.DAL.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Material.BLL.Helpers;
+using Material.DAL.Helpers;
 using ReflectionHelper = Material.BLL.Helpers.ReflectionHelper;
 
 namespace Material.BLL.Services;

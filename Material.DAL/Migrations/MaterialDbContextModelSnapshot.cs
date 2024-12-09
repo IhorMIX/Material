@@ -45,7 +45,7 @@ namespace Material.DAL.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("AuthorizationInfo");
+                    b.ToTable("AuthorizationInfo", (string)null);
                 });
 
             modelBuilder.Entity("Material.DAL.Entity.MaterialEntity", b =>
@@ -71,7 +71,7 @@ namespace Material.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Materials");
+                    b.ToTable("Materials", (string)null);
                 });
 
             modelBuilder.Entity("Material.DAL.Entity.User", b =>
@@ -92,7 +92,7 @@ namespace Material.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Material.DAL.Entity.AuthorizationInfo", b =>
