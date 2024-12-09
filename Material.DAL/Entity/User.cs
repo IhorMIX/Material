@@ -8,5 +8,6 @@ public class User : BaseEntity
     
     public AuthorizationInfo? AuthorizationInfo { get; set; }
     
-    public IEnumerable<MaterialEntity> Materials { get; set; }
+    public FavoriteList? FavoriteList { get; set; }
+    public ICollection<MaterialEntity> Materials { get; set; } = new List<MaterialEntity>();
 }

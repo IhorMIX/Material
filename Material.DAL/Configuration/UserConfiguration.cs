@@ -4,18 +4,23 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Material.DAL.Configuration;
 
-public class UserConfiguration: IEntityTypeConfiguration<User>
+public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.HasKey(i => i.Id);
+        builder.HasIndex(u => u.Login).IsUnique();
         
-        builder.HasOne(i => i.AuthorizationInfo)
-            .WithOne(i => i.User)
-            .HasForeignKey<AuthorizationInfo>(i => i.UserId);
-
-        builder.HasMany(i => i.Materials)
-            .WithOne()
-            .HasForeignKey(f => f.UserId);
+        builder.HasOne(u => u.FavoriteList)
+            .WithOne(f => f.User)
+            .HasForeignKey<FavoriteList>(f => f.UserId);
+        
+        builder.HasOne(u => u.AuthorizationInfo)
+            .WithOne(a => a.User)
+            .HasForeignKey<AuthorizationInfo>(a => a.UserId);
+        
+        builder.HasMany(u => u.Materials)
+            .WithOne(m => m.User)
+            .HasForeignKey(m => m.UserId);
     }
 }
+

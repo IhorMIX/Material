@@ -1,10 +1,7 @@
 namespace Material.DAL.Entity;
 
-public class MaterialEntity : BaseEntity
+public class FavoriteList: BaseEntity
 {
-    public string Name { get; set; }
-    public string TestNameParam { get; set; } = null!;
-    
     public int UserId { get; set; }
     public User User { get; set; } = null!;
     
