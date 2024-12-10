@@ -1,8 +1,8 @@
 using System.Security.Cryptography;
 
-namespace Material.BLL.Helpers;
+namespace Material.DAL.Helpers;
 
-public class PasswordHelper
+public static class PasswordHelper
     {
         public static string HashPassword(string password)
         {
