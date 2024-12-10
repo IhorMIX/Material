@@ -8,7 +8,6 @@ namespace Material.DAL
         public DbSet<User> Users { get; set; }
         public DbSet<MaterialEntity> Materials { get; set; }
         public DbSet<FavoriteList> FavoriteLists { get; set; }
-        public DbSet<FavoriteMaterial> FavoriteMaterials { get; set; }
         public DbSet<AuthorizationInfo> AuthorizationInfos { get; set; }
     }
 }

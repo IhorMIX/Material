@@ -8,15 +8,22 @@ public class FavoriteListConfiguration : IEntityTypeConfiguration<FavoriteList>
 {
     public void Configure(EntityTypeBuilder<FavoriteList> builder)
     {
-        builder.HasMany(f => f.FavoriteMaterials)
-            .WithOne(fm => fm.FavoriteList)
-            .HasForeignKey(fm => fm.FavoriteListId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasKey(fl => fl.Id);
         
-        builder.HasOne(f => f.User)
+        builder.HasOne(fl => fl.User)
             .WithOne(u => u.FavoriteList)
-            .HasForeignKey<FavoriteList>(f => f.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .HasForeignKey<FavoriteList>(fl => fl.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.HasMany(fl => fl.Materials)
+            .WithMany(m => m.FavoriteLists)
+            .UsingEntity<Dictionary<string, object>>(
+                j => j.HasOne<MaterialEntity>().WithMany().HasForeignKey("MaterialId").OnDelete(DeleteBehavior.Cascade),
+                j => j.HasOne<FavoriteList>().WithMany().HasForeignKey("FavoriteListId").OnDelete(DeleteBehavior.Cascade)
+            );
     }
 }
+
+
+
 

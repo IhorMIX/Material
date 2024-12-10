@@ -8,19 +8,16 @@ public class MaterialEntityConfiguration : IEntityTypeConfiguration<MaterialEnti
 {
     public void Configure(EntityTypeBuilder<MaterialEntity> builder)
     {
-        builder.HasOne(m => m.User)
-            .WithMany(u => u.Materials)
-            .HasForeignKey(m => m.UserId);
+        builder.HasKey(m => m.Id);
         
-        builder.HasMany(m => m.FavoriteMaterials)
-            .WithOne(fm => fm.Material)
-            .HasForeignKey(fm => fm.MaterialId);
-
-        builder.Property(m => m.Name)
-            .IsRequired()
-            .HasMaxLength(200);
-
-        builder.Property(m => m.TestNameParam)
-            .HasMaxLength(100);
+        builder.HasMany(m => m.FavoriteLists)
+            .WithMany(fl => fl.Materials)
+            .UsingEntity<Dictionary<string, object>>(
+                "FavoriteListMaterial",
+                j => j.HasOne<FavoriteList>().WithMany().HasForeignKey("FavoriteListId").OnDelete(DeleteBehavior.Cascade),
+                j => j.HasOne<MaterialEntity>().WithMany().HasForeignKey("MaterialId").OnDelete(DeleteBehavior.Cascade)
+            );
     }
 }
+
+
