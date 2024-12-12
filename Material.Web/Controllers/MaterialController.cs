@@ -14,14 +14,15 @@ namespace Material.Web.Controllers;
 public class MaterialController(IMaterialService materialService, ILogger<MaterialController> logger, IMapper mapper)
     : ControllerBase
 {
+    
     [HttpPost]
     public async Task<IActionResult> CreateMaterial([FromBody] MaterialCreateViewModel material,
         CancellationToken cancellationToken)
     {
         logger.LogInformation("Start to create material");
-
-        await materialService.CreateMaterialAsync(mapper.Map<MaterialEntityModel>(material), cancellationToken);
-
+        var userId = User.GetUserId();
+        
+        await materialService.CreateMaterialAsync(userId, mapper.Map<MaterialEntityModel>(material), cancellationToken);
         logger.LogInformation("Material was created");
 
         return Ok();
@@ -31,7 +32,7 @@ public class MaterialController(IMaterialService materialService, ILogger<Materi
     public async Task<IActionResult> GetMaterial([FromQuery] int materialId, CancellationToken cancellationToken)
     {
         logger.LogInformation("Get material");
-
+        
         var material = await materialService.GetByIdAsync(materialId, cancellationToken);
         var viewModel = mapper.Map<MaterialViewModel>(material);
 
@@ -44,12 +45,11 @@ public class MaterialController(IMaterialService materialService, ILogger<Materi
     public async Task<IActionResult> DeleteMaterial(int materialId, CancellationToken cancellationToken)
     {
         logger.LogInformation("Start to delete material");
-
-        await materialService.DeleteMaterialAsync(materialId, cancellationToken);
+        var userId = User.GetUserId();
+        await materialService.DeleteMaterialAsync(userId, materialId, cancellationToken);
 
         logger.LogInformation("Material was deleted");
-
-        return Ok("Material was deleted");
+        return Ok();
     }
     
     [HttpPost("add-to-favorite")]
@@ -67,7 +67,7 @@ public class MaterialController(IMaterialService materialService, ILogger<Materi
     {
         logger.LogInformation("Start to remove material");
         var userId = User.GetUserId();
-        await materialService.RemoveMaterialFromFavoritesAsync(materialId, userId, cancellationToken);
+        await materialService.RemoveMaterialFromFavoritesAsync(userId, materialId, cancellationToken);
 
         logger.LogInformation("Material was removed");
 
