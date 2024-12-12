@@ -8,6 +8,12 @@ public interface IMaterialService : IBaseService<MaterialEntityModel>
 
     Task DeleteMaterialAsync(int id, CancellationToken cancellationToken = default);
 
+    // Task RemoveMaterialFromFavoritesAsync(string materialName, int userId,
+    //     CancellationToken cancellationToken = default);
+
+    // Task AddMaterialToFavoritesAsync(MaterialEntityModel material,int userId,
+    //     CancellationToken cancellationToken = default);
+
     Task<MaterialEntityModel> UpdateMaterialAsync(int id, MaterialEntityModel material, CancellationToken cancellationToken = default);
 
     Task<MaterialEntityModel?> GetMaterialByName(string name, CancellationToken cancellationToken = default);

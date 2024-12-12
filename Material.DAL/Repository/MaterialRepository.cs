@@ -41,14 +41,4 @@ public class MaterialRepository(MaterialDbContext materialDbContext) : IMaterial
         _materialDbContext.Materials.Remove(material);
         await _materialDbContext.SaveChangesAsync(cancellationToken);
     }
-
-    public Task RemoveMaterialAsync(MaterialEntity material, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();// slug for feature
-    }
-
-    public Task AddMaterialAsync(MaterialEntity material, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();// slug for feature
-    }
 }

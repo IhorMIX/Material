@@ -28,14 +28,15 @@ public class MaterialService(IMaterialRepository materialRepository, IMapper map
         var materialDb = await _materialRepository.GetAll()
             .FirstOrDefaultAsync(i => i.Name == material.Name,
                 cancellationToken);
-        
+
         if (materialDb is not null && materialDb.Name == material.Name)
             throw new AlreadyMaterialNameException("Material name is already used by another user");
-        
+
         var materialDbModel = _mapper.Map<MaterialEntity>(material);
         await _materialRepository.CreateMaterial(materialDbModel, cancellationToken);
         material.Name = materialDbModel.Name;
     }
+
 
     public async Task DeleteMaterialAsync(int id, CancellationToken cancellationToken = default)
     {
@@ -81,4 +82,5 @@ public class MaterialService(IMaterialRepository materialRepository, IMapper map
         var materialModel = _mapper.Map<MaterialEntityModel>(materialDb);
         return materialModel;
     }
+
 }

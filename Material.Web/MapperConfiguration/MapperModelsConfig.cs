@@ -10,9 +10,15 @@ public class MapperModelsConfig : Profile
     public MapperModelsConfig()
     {
         CreateMap<UserModel, User>().ReverseMap();
-        CreateMap<UserCreateViewModel, UserModel>();
-        CreateMap<UserUpdateViewModel, UserModel>();
+        CreateMap<MaterialEntityModel, MaterialEntity>().ReverseMap();
         CreateMap<AuthorizationInfo, AuthorizationInfoModel>().ReverseMap();
+        
+        CreateMap<UserCreateViewModel, UserModel>();
+        CreateMap<MaterialCreateViewModel, MaterialEntityModel>();
+        CreateMap<MaterialAddViewModel, MaterialEntityModel>();
+        CreateMap<UserUpdateViewModel, UserModel>();
+        
         CreateMap<UserModel, UserViewModel>();
+        CreateMap<MaterialEntityModel, MaterialViewModel>();
     }
 }
