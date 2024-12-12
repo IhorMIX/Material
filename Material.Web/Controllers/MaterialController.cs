@@ -28,7 +28,7 @@ public class MaterialController(IMaterialService materialService, ILogger<Materi
     }
     
     [HttpGet("material-by-id")]
-    public async Task<IActionResult> GetMaterialAsync([FromQuery] int materialId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetMaterial([FromQuery] int materialId, CancellationToken cancellationToken)
     {
         logger.LogInformation("Get material");
 
@@ -41,7 +41,7 @@ public class MaterialController(IMaterialService materialService, ILogger<Materi
     }
 
     [HttpDelete("{materialId:int}")]
-    public async Task<IActionResult> DeleteMaterialAsync(int materialId, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteMaterial(int materialId, CancellationToken cancellationToken)
     {
         logger.LogInformation("Start to delete material");
 
@@ -60,5 +60,17 @@ public class MaterialController(IMaterialService materialService, ILogger<Materi
         await materialService.AddMaterialToFavoritesAsync(userId,addMaterialToFavorite.MaterialId , cancellationToken);
         logger.LogInformation("Material was added");
         return Ok();
+    }
+    
+    [HttpDelete("remove-from-favorite")]
+    public async Task<IActionResult> RemoveFromFavorite([FromQuery] int materialId, CancellationToken cancellationToken)
+    {
+        logger.LogInformation("Start to remove material");
+        var userId = User.GetUserId();
+        await materialService.RemoveMaterialFromFavoritesAsync(materialId, userId, cancellationToken);
+
+        logger.LogInformation("Material was removed");
+
+        return Ok("Material was deleted");
     }
 }

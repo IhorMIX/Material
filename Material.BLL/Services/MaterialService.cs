@@ -52,22 +52,28 @@ public class MaterialService(IMaterialRepository materialRepository, IMapper map
 
     public async Task AddMaterialToFavoritesAsync(int userId, int materialId, CancellationToken cancellationToken = default)
     {
-        // Получаем материал из базы данных (если нужно)
-        var material = await _materialRepository.GetByIdAsync(materialId, cancellationToken);
-        if (material == null)
-        {
-            throw new ArgumentException("Материал не найден.");
-        }
-
-        // Получаем пользователя из базы данных (если нужно)
-        var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
-        if (user == null)
-        {
-            throw new ArgumentException("Пользователь не найден.");
-        }
-
-        // Добавляем материал в список избранных для пользователя
-        await _favoriteListMaterialRepository.AddMaterial(material, user, cancellationToken);
+        var materialDb = await _materialRepository.GetByIdAsync(materialId, cancellationToken);
+        if (materialDb is null)
+            throw new MaterialNotFoundException($"Material with this Id {materialId} not found");
+        
+        var userDb = await _userRepository.GetByIdAsync(userId, cancellationToken);
+        if (userDb is null)
+            throw new UserNotFoundException($"User with this Id {userId} not found");
+        //check for isExist ?
+        await _favoriteListMaterialRepository.AddMaterial(materialDb, userDb, cancellationToken);
+    }
+    
+    public async Task RemoveMaterialFromFavoritesAsync(int userId, int materialId, CancellationToken cancellationToken = default)
+    {
+        var materialDb = await _materialRepository.GetByIdAsync(materialId, cancellationToken);
+        if (materialDb is null)
+            throw new MaterialNotFoundException($"Material with this Id {materialId} not found");
+        
+        var userDb = await _userRepository.GetByIdAsync(userId, cancellationToken);
+        if (userDb is null)
+            throw new UserNotFoundException($"User with this Id {userId} not found");
+        //check for isExist ?
+        await _favoriteListMaterialRepository.RemoveMaterial(materialDb.Id, userDb.Id, cancellationToken);
     }
 
     public async Task<MaterialEntityModel> UpdateMaterialAsync(int id, MaterialEntityModel material, CancellationToken cancellationToken = default)
