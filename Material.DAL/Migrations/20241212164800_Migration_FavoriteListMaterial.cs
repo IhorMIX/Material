@@ -5,7 +5,7 @@
 namespace Material.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class Migration_FavoriteList : Migration
+    public partial class Migration_FavoriteListMaterial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -45,58 +45,40 @@ namespace Material.DAL.Migrations
                 column: "Id");
 
             migrationBuilder.CreateTable(
-                name: "FavoriteLists",
+                name: "FavoriteListMaterials",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    MaterialId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FavoriteLists", x => x.Id);
+                    table.PrimaryKey("PK_FavoriteListMaterials", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FavoriteLists_Users_UserId",
+                        name: "FK_FavoriteListMaterials_Materials_MaterialId",
+                        column: x => x.MaterialId,
+                        principalTable: "Materials",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FavoriteListMaterials_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "FavoriteListMaterialEntity",
-                columns: table => new
-                {
-                    FavoriteListsId = table.Column<int>(type: "int", nullable: false),
-                    MaterialsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FavoriteListMaterialEntity", x => new { x.FavoriteListsId, x.MaterialsId });
-                    table.ForeignKey(
-                        name: "FK_FavoriteListMaterialEntity_FavoriteLists_FavoriteListsId",
-                        column: x => x.FavoriteListsId,
-                        principalTable: "FavoriteLists",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_FavoriteListMaterialEntity_Materials_MaterialsId",
-                        column: x => x.MaterialsId,
-                        principalTable: "Materials",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_FavoriteListMaterials_MaterialId",
+                table: "FavoriteListMaterials",
+                column: "MaterialId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FavoriteListMaterialEntity_MaterialsId",
-                table: "FavoriteListMaterialEntity",
-                column: "MaterialsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FavoriteLists_UserId",
-                table: "FavoriteLists",
-                column: "UserId",
-                unique: true);
+                name: "IX_FavoriteListMaterials_UserId",
+                table: "FavoriteListMaterials",
+                column: "UserId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_AuthorizationInfos_Users_UserId",
@@ -115,10 +97,7 @@ namespace Material.DAL.Migrations
                 table: "AuthorizationInfos");
 
             migrationBuilder.DropTable(
-                name: "FavoriteListMaterialEntity");
-
-            migrationBuilder.DropTable(
-                name: "FavoriteLists");
+                name: "FavoriteListMaterials");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_AuthorizationInfos",

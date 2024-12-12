@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Material.DAL.Migrations
 {
     [DbContext(typeof(MaterialDbContext))]
-    [Migration("20241210123446_Migration_FavoriteList")]
-    partial class Migration_FavoriteList
+    [Migration("20241212164800_Migration_FavoriteListMaterial")]
+    partial class Migration_FavoriteListMaterial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,21 +24,6 @@ namespace Material.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("FavoriteListMaterialEntity", b =>
-                {
-                    b.Property<int>("FavoriteListsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MaterialsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("FavoriteListsId", "MaterialsId");
-
-                    b.HasIndex("MaterialsId");
-
-                    b.ToTable("FavoriteListMaterialEntity");
-                });
 
             modelBuilder.Entity("Material.DAL.Entity.AuthorizationInfo", b =>
                 {
@@ -66,7 +51,7 @@ namespace Material.DAL.Migrations
                     b.ToTable("AuthorizationInfos");
                 });
 
-            modelBuilder.Entity("Material.DAL.Entity.FavoriteList", b =>
+            modelBuilder.Entity("Material.DAL.Entity.FavoriteListMaterial", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -74,15 +59,19 @@ namespace Material.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("MaterialId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("MaterialId");
 
-                    b.ToTable("FavoriteLists");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FavoriteListMaterials");
                 });
 
             modelBuilder.Entity("Material.DAL.Entity.MaterialEntity", b =>
@@ -127,21 +116,6 @@ namespace Material.DAL.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("FavoriteListMaterialEntity", b =>
-                {
-                    b.HasOne("Material.DAL.Entity.FavoriteList", null)
-                        .WithMany()
-                        .HasForeignKey("FavoriteListsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Material.DAL.Entity.MaterialEntity", null)
-                        .WithMany()
-                        .HasForeignKey("MaterialsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Material.DAL.Entity.AuthorizationInfo", b =>
                 {
                     b.HasOne("Material.DAL.Entity.User", "User")
@@ -153,22 +127,35 @@ namespace Material.DAL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Material.DAL.Entity.FavoriteList", b =>
+            modelBuilder.Entity("Material.DAL.Entity.FavoriteListMaterial", b =>
                 {
-                    b.HasOne("Material.DAL.Entity.User", "User")
-                        .WithOne("FavoriteList")
-                        .HasForeignKey("Material.DAL.Entity.FavoriteList", "UserId")
+                    b.HasOne("Material.DAL.Entity.MaterialEntity", "Material")
+                        .WithMany("FavoriteListMaterials")
+                        .HasForeignKey("MaterialId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Material.DAL.Entity.User", "User")
+                        .WithMany("FavoriteListMaterials")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Material");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Material.DAL.Entity.MaterialEntity", b =>
+                {
+                    b.Navigation("FavoriteListMaterials");
                 });
 
             modelBuilder.Entity("Material.DAL.Entity.User", b =>
                 {
                     b.Navigation("AuthorizationInfo");
 
-                    b.Navigation("FavoriteList");
+                    b.Navigation("FavoriteListMaterials");
                 });
 #pragma warning restore 612, 618
         }

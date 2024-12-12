@@ -5,6 +5,6 @@ public class MaterialEntityModel : BaseModel
     public string Name { get; set; }
 
     public string TestNameParam { get; set; } = null!;
-    
-    public ICollection<FavoriteListModel> FavoriteLists { get; set; } = new List<FavoriteListModel>();
+
+    public IEnumerable<FavoriteListMaterialModel> FavoriteListMaterial { get; set; } = null!;
 }

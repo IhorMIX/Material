@@ -6,5 +6,5 @@ public class User : BaseEntity
 
     public string Password { get; set; } = null!;
     public AuthorizationInfo? AuthorizationInfo { get; set; }
-    public FavoriteList? FavoriteList { get; set; }
+    public IEnumerable<FavoriteListMaterial>? FavoriteListMaterials { get; set; }
 }

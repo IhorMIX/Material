@@ -8,5 +8,5 @@ public class UserModel : BaseModel
     
     public AuthorizationInfoModel? AuthorizationInfo { get; set; }
     
-    public FavoriteListModel? FavoriteList { get; set; }
+    public IEnumerable<FavoriteListMaterialModel> FavoriteListMaterial { get; set; } = null!;
 }
