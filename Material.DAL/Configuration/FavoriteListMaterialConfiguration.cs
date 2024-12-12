@@ -8,14 +8,14 @@ public class FavoriteListMaterialConfiguration : IEntityTypeConfiguration<Favori
 {
     public void Configure(EntityTypeBuilder<FavoriteListMaterial> builder)
     {
-        builder.HasKey(f => f.Id); // Основний ключ
-
-        builder.HasOne(f => f.User) // Відносини з User
+        builder.HasKey(f => f.Id);
+        
+        builder.HasOne(f => f.User)
             .WithMany(u => u.FavoriteListMaterials)
             .HasForeignKey(f => f.UserId)
-            .OnDelete(DeleteBehavior.Cascade); // Видалення користувача видаляє всі зв'язки
+            .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(f => f.Material) // Відносини з MaterialEntity
+        builder.HasOne(f => f.Material)
             .WithMany(m => m.FavoriteListMaterials)
             .HasForeignKey(f => f.MaterialId)
             .OnDelete(DeleteBehavior.Cascade);

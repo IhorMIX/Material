@@ -10,9 +10,9 @@ public class MaterialEntityConfiguration : IEntityTypeConfiguration<MaterialEnti
     {
         builder.HasKey(m => m.Id);
         
-        builder.HasKey(m => m.Id); // Основний ключ
+        builder.HasKey(m => m.Id);
 
-        builder.HasMany(m => m.FavoriteListMaterials) // Відносини з FavoriteListMaterials
+        builder.HasMany(m => m.FavoriteListMaterials)
             .WithOne(f => f.Material)
             .HasForeignKey(f => f.MaterialId);
     }

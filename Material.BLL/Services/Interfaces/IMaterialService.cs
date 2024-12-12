@@ -11,8 +11,8 @@ public interface IMaterialService : IBaseService<MaterialEntityModel>
     // Task RemoveMaterialFromFavoritesAsync(string materialName, int userId,
     //     CancellationToken cancellationToken = default);
 
-    // Task AddMaterialToFavoritesAsync(MaterialEntityModel material,int userId,
-    //     CancellationToken cancellationToken = default);
+    Task AddMaterialToFavoritesAsync(int userId, int materialId,
+        CancellationToken cancellationToken = default);
 
     Task<MaterialEntityModel> UpdateMaterialAsync(int id, MaterialEntityModel material, CancellationToken cancellationToken = default);
 

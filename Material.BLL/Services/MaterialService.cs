@@ -9,10 +9,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Material.BLL.Services;
 
-public class MaterialService(IMaterialRepository materialRepository, IMapper mapper) : IMaterialService
+public class MaterialService(IMaterialRepository materialRepository, IMapper mapper,IFavoriteListMaterialRepository favoriteListMaterialRepository
+,IUserRepository userRepository) : IMaterialService
 {
     private readonly IMaterialRepository _materialRepository = materialRepository;
     private readonly IMapper _mapper = mapper;
+    private readonly IFavoriteListMaterialRepository _favoriteListMaterialRepository = favoriteListMaterialRepository;
+    private readonly IUserRepository _userRepository = userRepository;
     public async Task<MaterialEntityModel?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         var materialDb = await _materialRepository.GetByIdAsync(id, cancellationToken);
@@ -45,6 +48,26 @@ public class MaterialService(IMaterialRepository materialRepository, IMapper map
             throw new MaterialNotFoundException($"Material with this Id {id} not found");
 
         await _materialRepository.DeleteMaterialAsync(materialDb, cancellationToken);
+    }
+
+    public async Task AddMaterialToFavoritesAsync(int userId, int materialId, CancellationToken cancellationToken = default)
+    {
+        // Получаем материал из базы данных (если нужно)
+        var material = await _materialRepository.GetByIdAsync(materialId, cancellationToken);
+        if (material == null)
+        {
+            throw new ArgumentException("Материал не найден.");
+        }
+
+        // Получаем пользователя из базы данных (если нужно)
+        var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
+        if (user == null)
+        {
+            throw new ArgumentException("Пользователь не найден.");
+        }
+
+        // Добавляем материал в список избранных для пользователя
+        await _favoriteListMaterialRepository.AddMaterial(material, user, cancellationToken);
     }
 
     public async Task<MaterialEntityModel> UpdateMaterialAsync(int id, MaterialEntityModel material, CancellationToken cancellationToken = default)
@@ -83,4 +106,5 @@ public class MaterialService(IMaterialRepository materialRepository, IMapper map
         return materialModel;
     }
 
+    
 }

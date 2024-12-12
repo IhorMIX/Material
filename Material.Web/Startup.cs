@@ -30,6 +30,7 @@ public class Startup
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IMaterialRepository, MaterialRepository>();
         services.AddScoped<IMaterialService, MaterialService>();
+        services.AddScoped<IFavoriteListMaterialRepository, FavoriteListMaterialRepository>();
         
         services.AddSingleton<TokenHelper>();
         

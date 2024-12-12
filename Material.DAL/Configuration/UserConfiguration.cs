@@ -8,13 +8,13 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.HasKey(u => u.Id); // Основний ключ
+        builder.HasKey(u => u.Id);
 
-        builder.HasOne(u => u.AuthorizationInfo) // Відносини з AuthorizationInfo
-            .WithOne() // Один до одного
-            .HasForeignKey<AuthorizationInfo>(a => a.UserId); // Зовнішній ключ в AuthorizationInfo
+        builder.HasOne(u => u.AuthorizationInfo)
+            .WithOne()
+            .HasForeignKey<AuthorizationInfo>(a => a.UserId);
 
-        builder.HasMany(u => u.FavoriteListMaterials) // Відносини з FavoriteListMaterials
+        builder.HasMany(u => u.FavoriteListMaterials)
             .WithOne(f => f.User)
             .HasForeignKey(f => f.UserId);
     }

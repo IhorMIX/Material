@@ -1,6 +1,7 @@
 using AutoMapper;
 using Material.BLL.Models;
 using Material.BLL.Services.Interfaces;
+using Material.Web.Extensions;
 using Material.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -49,5 +50,15 @@ public class MaterialController(IMaterialService materialService, ILogger<Materi
         logger.LogInformation("Material was deleted");
 
         return Ok("Material was deleted");
+    }
+    
+    [HttpPost("add-to-favorite")]
+    public async Task<IActionResult> AddToFavorite([FromBody] AddMaterialToFavoriteModel addMaterialToFavorite, CancellationToken cancellationToken)
+    {
+        logger.LogInformation("Start to add material");
+        var userId = User.GetUserId();
+        await materialService.AddMaterialToFavoritesAsync(userId,addMaterialToFavorite.MaterialId , cancellationToken);
+        logger.LogInformation("Material was added");
+        return Ok();
     }
 }
