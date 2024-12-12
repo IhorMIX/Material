@@ -137,5 +137,18 @@ public class MaterialService(IMaterialRepository materialRepository, IMapper map
         return materialModel;
     }
 
-    
+    public async Task<IEnumerable<MaterialEntityModel>> GetMaterialsFromFavoriteListAsync(int userId, CancellationToken cancellationToken = default)
+    {
+        var userDb = await _userRepository.GetByIdAsync(userId, cancellationToken);
+        if (userDb is null)
+            throw new UserNotFoundException($"User with this Id {userId} not found");
+        
+        var favoriteMaterials = await _favoriteListMaterialRepository.GetAll()
+            .Where(f => f.UserId == userId)
+            .Select(f => f.Material)
+            .ToListAsync(cancellationToken);
+        
+        return _mapper.Map<IEnumerable<MaterialEntityModel>>(favoriteMaterials);
+    }
+
 }

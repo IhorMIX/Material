@@ -73,4 +73,15 @@ public class MaterialController(IMaterialService materialService, ILogger<Materi
 
         return Ok("Material was deleted");
     }
+    
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetFavoriteList(CancellationToken cancellationToken)
+    {
+        var userId = User.GetUserId();
+        var materials = await materialService.GetMaterialsFromFavoriteListAsync(userId, cancellationToken);
+
+        var materialViewModels = mapper.Map<IEnumerable<MaterialViewModel>>(materials);
+        return Ok(materialViewModels);
+    }
+
 }
