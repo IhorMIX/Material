@@ -5,7 +5,7 @@ using Material.BLL.Services.Interfaces;
 using Material.DAL.Entity;
 using Material.DAL.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Material.BLL.Helpers;
+using Material.DAL.Helpers;
 using ReflectionHelper = Material.BLL.Helpers.ReflectionHelper;
 
 namespace Material.BLL.Services;
@@ -32,7 +32,7 @@ public class UserService(IUserRepository userRepository, IMapper mapper) : IUser
                 cancellationToken);
         
         if (userDb is not null && userDb.Login == user.Login)
-            throw new AlreadyLoginAndEmailException("Login is already used by another user");
+            throw new AlreadyLoginException("Login is already used by another user");
         
         var userDbModel = _mapper.Map<User>(user);
         userDbModel.Password = PasswordHelper.HashPassword(userDbModel.Password);

@@ -1,3 +1,4 @@
+using Material.BLL.Helpers;
 using Material.BLL.Services;
 using Material.BLL.Services.Interfaces;
 using Material.DAL;
@@ -27,6 +28,10 @@ public class Startup
         
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IMaterialRepository, MaterialRepository>();
+        services.AddScoped<IMaterialService, MaterialService>();
+        services.AddScoped<IFavoriteListMaterialRepository, FavoriteListMaterialRepository>();
+        
         services.AddSingleton<TokenHelper>();
         
         var connectionString = Environment.GetEnvironmentVariable("SQLSERVER_CONNECTION_STRING") 

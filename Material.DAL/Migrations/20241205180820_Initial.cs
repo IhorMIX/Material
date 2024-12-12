@@ -1,14 +1,13 @@
 ﻿using System;
+using Material.DAL.Helpers;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Material.DAL.Migrations
 {
-    /// <inheritdoc />
     public partial class Initial : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -77,9 +76,12 @@ namespace Material.DAL.Migrations
                 name: "IX_Materials_UserId",
                 table: "Materials",
                 column: "UserId");
+
+            string hashedPassword = PasswordHelper.HashPassword("admin");
+            migrationBuilder.Sql(
+                $"INSERT INTO Users (Login, Password) VALUES ('admin', '{hashedPassword}')");
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

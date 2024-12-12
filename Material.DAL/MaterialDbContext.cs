@@ -7,7 +7,9 @@ namespace Material.DAL
     {
         public DbSet<User> Users { get; set; }
         public DbSet<MaterialEntity> Materials { get; set; }
+        public DbSet<FavoriteListMaterial> FavoriteListMaterials { get; set; }
         
+        public DbSet<AuthorizationInfo> AuthorizationInfos { get; set; }
     }
 }
 
